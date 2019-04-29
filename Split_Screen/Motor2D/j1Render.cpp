@@ -3,12 +3,14 @@
 #include "j1App.h"
 #include "j1Window.h"
 #include "j1Render.h"
+#include "Camera.h"
+#include "j1Input.h"
 
 #define VSYNC true
 
 j1Render::j1Render() : j1Module()
 {
-	name.create("renderer");
+	name.assign("renderer");
 	background.r = 0;
 	background.g = 0;
 	background.b = 0;
@@ -17,7 +19,17 @@ j1Render::j1Render() : j1Module()
 
 // Destructor
 j1Render::~j1Render()
-{}
+{
+	for (std::vector<Camera*>::iterator item_cam = cameras.begin(); item_cam != cameras.end(); ++item_cam)
+		{
+			if ((*item_cam) != nullptr)
+			{
+				delete (*item_cam);
+				(*item_cam) = nullptr;
+			}
+		}
+		cameras.clear();
+}
 
 // Called before render is available
 bool j1Render::Awake(pugi::xml_node& config)
@@ -42,10 +54,61 @@ bool j1Render::Awake(pugi::xml_node& config)
 	}
 	else
 	{
-		camera.w = App->win->screen_surface->w;
-		camera.h = App->win->screen_surface->h;
-		camera.x = 0;
-		camera.y = 0;
+		Camera* camera_aux1 = nullptr;
+		camera_aux1 = new Camera();
+
+		Camera* camera_aux2 = nullptr;
+		camera_aux2 = new Camera();
+
+		Camera* camera_aux3 = nullptr;
+		camera_aux3 = new Camera();
+
+		Camera* camera_aux4 = nullptr;
+		camera_aux4 = new Camera();
+
+		camera_aux1->rect.w = App->win->screen_surface->w * .5f;
+		camera_aux2->rect.w = App->win->screen_surface->w * .5f;
+		camera_aux3->rect.w = App->win->screen_surface->w * .5f;
+		camera_aux4->rect.w = App->win->screen_surface->w * .5f;
+
+		camera_aux1->rect.h = App->win->screen_surface->h * .5f;
+		camera_aux2->rect.h = App->win->screen_surface->h * .5f;
+		camera_aux3->rect.h = App->win->screen_surface->h * .5f;
+		camera_aux4->rect.h = App->win->screen_surface->h * .5f;
+
+		camera_aux1->screen_section = {
+			0,
+			0,
+			(int)(App->win->screen_surface->w * .5f),
+			(int)(App->win->screen_surface->h * .5f)
+		};
+
+		camera_aux2->screen_section = {
+			(int)(App->win->screen_surface->w * .5f),
+			0,
+			(int)(App->win->screen_surface->w * .5f),
+			(int)(App->win->screen_surface->h * .5f)
+		};
+
+		camera_aux3->screen_section = {
+			0,
+			(int)(App->win->screen_surface->h * .5f),
+			(int)(App->win->screen_surface->w * .5f),
+			(int)(App->win->screen_surface->h * .5f)
+		};
+
+		camera_aux4->screen_section = {
+		(int)(App->win->screen_surface->w * .5f),
+		(int)(App->win->screen_surface->h * .5f),
+		(int)(App->win->screen_surface->w * .5f),
+		(int)(App->win->screen_surface->h * .5f)
+		};
+
+		cameras.push_back(camera_aux1);
+		cameras.push_back(camera_aux2);
+		cameras.push_back(camera_aux3);
+		cameras.push_back(camera_aux4);
+
 	}
 
 	return ret;
@@ -71,6 +134,46 @@ bool j1Render::PostUpdate()
 {
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
+
+	std::vector<Camera*>::iterator item_cam;
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		debug = !debug;
+		if (!debug)
+		{
+			camera_saves.push_back(cameras.back());
+			cameras.pop_back();
+
+			camera_saves.push_back(cameras.back());
+			cameras.pop_back();
+
+			camera_saves.push_back(cameras.back());
+			cameras.pop_back();
+
+			cameras.front()->rect.w = App->win->screen_surface->w;
+			cameras.front()->rect.h = App->win->screen_surface->h;
+
+			cameras.front()->screen_section.w = App->win->screen_surface->w;
+			cameras.front()->screen_section.h = App->win->screen_surface->h;
+		}
+		else
+		{
+			cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();
+
+			cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();
+
+			cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();
+
+			cameras.front()->rect.w *= 0.5f;
+			cameras.front()->rect.h *= 0.5f;
+
+			cameras.front()->screen_section.w *= 0.5f;
+			cameras.front()->screen_section.h *= 0.5f;
+		}
+	}
 	return true;
 }
 
@@ -85,8 +188,8 @@ bool j1Render::CleanUp()
 // Load Game State
 bool j1Render::Load(pugi::xml_node& data)
 {
-	camera.x = data.child("camera").attribute("x").as_int();
-	camera.y = data.child("camera").attribute("y").as_int();
+	//camera.x = data.child("camera").attribute("x").as_int();
+	//camera.y = data.child("camera").attribute("y").as_int();
 
 	return true;
 }
@@ -96,8 +199,8 @@ bool j1Render::Save(pugi::xml_node& data) const
 {
 	pugi::xml_node cam = data.append_child("camera");
 
-	cam.append_attribute("x") = camera.x;
-	cam.append_attribute("y") = camera.y;
+	/*cam.append_attribute("x") = camera.x;
+	cam.append_attribute("y") = camera.y;*/
 
 	return true;
 }
@@ -117,85 +220,43 @@ void j1Render::ResetViewPort()
 	SDL_RenderSetViewport(renderer, &viewport);
 }
 
-iPoint j1Render::ScreenToWorld(int x, int y) const
-{
-	iPoint ret;
-	int scale = App->win->GetScale();
-
-	ret.x = (x - camera.x / scale);
-	ret.y = (y - camera.y / scale);
-
-	return ret;
-}
-
 // Blit to screen
-bool j1Render::Blit(SDL_Texture* texture, int x, int y, const SDL_Rect* section, float speed, double angle, int pivot_x, int pivot_y) const
+void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y, Camera* current_camera, const SDL_Rect* section) const
 {
-	bool ret = true;
 	uint scale = App->win->GetScale();
 
-	SDL_Rect rect;
-	rect.x = (int)(camera.x * speed) + x * scale;
-	rect.y = (int)(camera.y * speed) + y * scale;
+	SDL_Rect rect_in_screen;
+	SDL_Rect spritesheet_rect{ 0,0,0,0 };
 
-	if(section != NULL)
+	//Transform the rect in the word to the rect in screen =======================
+	rect_in_screen.x = -current_camera->rect.x + screen_x * scale;
+	rect_in_screen.y = -current_camera->rect.y + screen_y * scale;
+
+	if (section != NULL)
 	{
-		rect.w = section->w;
-		rect.h = section->h;
+		spritesheet_rect = *section;
+		rect_in_screen.w = section->w * scale;
+		rect_in_screen.h = section->h * scale;
 	}
 	else
 	{
-		SDL_QueryTexture(texture, NULL, NULL, &rect.w, &rect.h);
+		SDL_QueryTexture(texture, NULL, NULL, &rect_in_screen.w, &rect_in_screen.h);
+		spritesheet_rect.w = rect_in_screen.w;
+		spritesheet_rect.h = rect_in_screen.h;
 	}
-
-	rect.w *= scale;
-	rect.h *= scale;
-
-	SDL_Point* p = NULL;
-	SDL_Point pivot;
-
-	if(pivot_x != INT_MAX && pivot_y != INT_MAX)
+	if (current_camera == cameras[1])
 	{
-		pivot.x = pivot_x;
-		pivot.y = pivot_y;
-		p = &pivot;
+		current_camera = current_camera;
 	}
+	//Move the rect_in_screen to their correct screen =========================== 	
+	rect_in_screen.x += current_camera->screen_section.x;
+	rect_in_screen.y += current_camera->screen_section.y;
 
-	if(SDL_RenderCopyEx(renderer, texture, section, &rect, angle, p, SDL_FLIP_NONE) != 0)
+	//Print the rect_in_screen ============================================
+	if (SDL_RenderCopy(renderer, texture, &spritesheet_rect, &rect_in_screen))
 	{
-		LOG("Cannot blit to screen. SDL_RenderCopy error: %s", SDL_GetError());
-		ret = false;
+		LOG("Cannot blit to main_object. SDL_RenderCopy error: %s", SDL_GetError());
 	}
-
-	return ret;
-}
-
-bool j1Render::DrawQuad(const SDL_Rect& rect, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool filled, bool use_camera) const
-{
-	bool ret = true;
-	uint scale = App->win->GetScale();
-
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
-
-	SDL_Rect rec(rect);
-	if(use_camera)
-	{
-		rec.x = (int)(camera.x + rect.x * scale);
-		rec.y = (int)(camera.y + rect.y * scale);
-		rec.w *= scale;
-		rec.h *= scale;
-	}
-
-	int result = (filled) ? SDL_RenderFillRect(renderer, &rec) : SDL_RenderDrawRect(renderer, &rec);
-
-	if(result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
 }
 
 bool j1Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
@@ -209,7 +270,7 @@ bool j1Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 
 	int result = -1;
 
 	if(use_camera)
-		result = SDL_RenderDrawLine(renderer, camera.x + x1 * scale, camera.y + y1 * scale, camera.x + x2 * scale, camera.y + y2 * scale);
+		result = SDL_RenderDrawLine(renderer, -cameras[0]->rect.x + x1 * scale, -cameras[0]->rect.y + y1 * scale, -cameras[0]->rect.x + x2 * scale, -cameras[0]->rect.y + y2 * scale);
 	else
 		result = SDL_RenderDrawLine(renderer, x1 * scale, y1 * scale, x2 * scale, y2 * scale);
 
@@ -222,32 +283,11 @@ bool j1Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 
 	return ret;
 }
 
-bool j1Render::DrawCircle(int x, int y, int radius, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
+bool j1Render::IsOnCamera(const int & x, const int & y, const int & w, const int & h, Camera* camera) const
 {
-	bool ret = true;
-	uint scale = App->win->GetScale();
+	int scale = App->win->GetScale();
 
-	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
-	SDL_SetRenderDrawColor(renderer, r, g, b, a);
+	SDL_Rect r = { x*scale,y*scale,w*scale,h*scale };
 
-	int result = -1;
-	SDL_Point points[360];
-
-	float factor = (float)M_PI / 180.0f;
-
-	for(uint i = 0; i < 360; ++i)
-	{
-		points[i].x = (int)(x + radius * cos(i * factor));
-		points[i].y = (int)(y + radius * sin(i * factor));
-	}
-
-	result = SDL_RenderDrawPoints(renderer, points, 360);
-
-	if(result != 0)
-	{
-		LOG("Cannot draw quad to screen. SDL_RenderFillRect error: %s", SDL_GetError());
-		ret = false;
-	}
-
-	return ret;
+	return SDL_HasIntersection(&r, &camera->rect);
 }

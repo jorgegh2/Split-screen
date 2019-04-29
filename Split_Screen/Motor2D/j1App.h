@@ -1,7 +1,7 @@
 #ifndef __j1APP_H__
 #define __j1APP_H__
 
-#include "p2List.h"
+#include <list>
 #include "j1Module.h"
 #include "j1PerfTimer.h"
 #include "j1Timer.h"
@@ -47,16 +47,16 @@ public:
 	const char* GetArgv(int index) const;
 	const char* GetTitle() const;
 	const char* GetOrganization() const;
-	float GetDT() const;
 
 	void LoadGame(const char* file);
 	void SaveGame(const char* file) const;
-	void GetSaveGames(p2List<p2SString>& list_to_fill) const;
+
+	pugi::xml_node LoadConfig(pugi::xml_document&, std::string name) const;
+
+public:
+	bool capactivated = true;
 
 private:
-
-	// Load config file
-	pugi::xml_node LoadConfig(pugi::xml_document&) const;
 
 	// Call modules before each loop iteration
 	void PrepareUpdate();
@@ -91,17 +91,21 @@ public:
 
 private:
 
-	p2List<j1Module*>	modules;
+	std::list<j1Module*>	modules;
 	int					argc;
-	char**				args;
+	char**				args = nullptr;
 
-	p2SString			title;
-	p2SString			organization;
+	std::string			title;
+	std::string			organization;
 
 	mutable bool		want_to_save = false;
 	bool				want_to_load = false;
-	p2SString			load_game;
-	mutable p2SString	save_game;
+	std::string			load_game;
+	mutable std::string	save_game;
+
+	pugi::xml_document	config_file;
+	pugi::xml_node		config;
+	std::string			config_name;
 
 	j1PerfTimer			ptimer;
 	uint64				frame_count = 0;
@@ -110,10 +114,10 @@ private:
 	j1Timer				last_sec_frame_time;
 	uint32				last_sec_frame_count = 0;
 	uint32				prev_last_sec_frame_count = 0;
-	float				dt = 0.0f;
-	int					capped_ms = -1;
+	uint16_t			framerate_cap;
+	float				dt;
 };
 
-extern j1App* App; // No student is asking me about that ... odd :-S
+extern j1App* App; 
 
 #endif
