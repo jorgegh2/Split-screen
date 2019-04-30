@@ -57,7 +57,7 @@ bool j1Map::PostUpdate()
 						SDL_Rect r = tileset->GetTileRect(tile_id);
 						iPoint pos = MapToWorld(x, y);
 
-						if (App->render->IsOnCamera(pos.x, pos.y, data.tile_width, data.tile_height, (*item_cam)))
+						if (App->render->IsOnCamera(pos.x, pos.y, data.tile_width, data.tile_height+32, (*item_cam)))
 						{
 							App->render->Blit(tileset->texture, pos.x, pos.y, (*item_cam), &r);
 						}
