@@ -2,7 +2,7 @@
 
 #include "Defs.h"
 #include "Log.h"
-#include "j1App.h"
+#include "App.h"
 
 // This is needed here because SDL redefines main function
 // do not add any other libraries here, instead put them in their modules

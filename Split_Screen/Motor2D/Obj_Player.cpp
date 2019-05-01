@@ -1,6 +1,6 @@
 #include "SDL/include/SDL.h"
 
-#include "j1App.h"
+#include "App.h"
 #include "Obj_Player.h"
 #include "j1Textures.h"
 #include "j1Render.h"

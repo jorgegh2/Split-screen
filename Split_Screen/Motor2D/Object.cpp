@@ -2,7 +2,7 @@
 
 //#include "Brofiler/Brofiler.h"
 
-#include "j1App.h"
+#include "App.h"
 #include "Object.h"
 
 #include "j1ObjManager.h"

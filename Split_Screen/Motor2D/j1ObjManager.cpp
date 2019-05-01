@@ -6,7 +6,7 @@
 #include "PugiXml/src/pugixml.hpp"
 
 #include "j1ObjManager.h"
-#include "j1App.h"
+#include "App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
 #include "Object.h"

@@ -1,6 +1,6 @@
 #include "Defs.h"
 #include "Log.h"
-#include "j1App.h"
+#include "App.h"
 #include "j1Window.h"
 
 #include "SDL/include/SDL.h"

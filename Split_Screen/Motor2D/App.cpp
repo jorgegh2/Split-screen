@@ -10,7 +10,7 @@
 #include "j1Textures.h"
 #include "j1Scene.h"
 #include "j1Map.h"
-#include "j1App.h"
+#include "App.h"
 
 
 // Constructor
@@ -205,7 +205,7 @@ void j1App::FinishUpdate()
 	uint32 frames_on_last_update = prev_last_sec_frame_count;
 
 	static char title[256];
-	sprintf_s(title, 256, "EasingSplinesResearch");
+	sprintf_s(title, 256, "SplitScreen");
 	App->win->SetTitle(title);
 
 
@@ -223,8 +223,6 @@ void j1App::FinishUpdate()
 bool j1App::PreUpdate()
 {
 	bool ret = true;
-
-
 
 	j1Module* pModule = NULL;
 
