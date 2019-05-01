@@ -1,8 +1,8 @@
 #include <iostream> 
 #include <sstream> 
 
-#include "p2Defs.h"
-#include "p2Log.h"
+#include "Defs.h"
+#include "Log.h"
 
 #include "j1Window.h"
 #include "j1Input.h"
@@ -24,6 +24,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	tex = new j1Textures();
 	scene = new j1Scene();
 	map = new j1Map();
+	obj_manager = new j1ObjManager();
 
 	// Ordered for awake / Start / Update
 	// Reverse order of CleanUp
@@ -32,6 +33,7 @@ j1App::j1App(int argc, char* args[]) : argc(argc), args(args)
 	AddModule(tex);
 	AddModule(map);
 	AddModule(scene);
+	AddModule(obj_manager);
 
 	// render last to swap buffer
 	AddModule(render);

@@ -1,5 +1,4 @@
-#include "p2Defs.h"
-#include "p2Log.h"
+#include "Log.h"
 #include "j1App.h"
 #include "j1Input.h"
 #include "j1Textures.h"
@@ -33,6 +32,11 @@ bool j1Scene::Start()
 	App->map->Load("iso_walk.tmx");	
 
 	debug_tex = App->tex->Load("maps/path2.png");
+
+	player_A = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 0,0 });
+	player_B = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 5,5 });
+	player_C = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 10,10 });
+	player_D = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 15,15 });
 
 	return true;
 }
@@ -68,7 +72,7 @@ bool j1Scene::Update(float dt)
 }
 
 // Called each loop iteration
-bool j1Scene::PostUpdate()
+bool j1Scene::PostUpdate(float dt)
 {
 	bool ret = true;
 

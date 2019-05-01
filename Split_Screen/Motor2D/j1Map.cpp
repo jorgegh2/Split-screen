@@ -1,5 +1,4 @@
-#include "p2Defs.h"
-#include "p2Log.h"
+#include "Log.h"
 #include "j1App.h"
 #include "j1Render.h"
 #include "j1Textures.h"
@@ -55,7 +54,7 @@ bool j1Map::PostUpdate()
 						TileSet* tileset = GetTilesetFromTileId(tile_id);
 
 						SDL_Rect r = tileset->GetTileRect(tile_id);
-						iPoint pos = MapToWorld(x, y);
+						iPoint pos = MapToScreenI(x, y);
 
 						if (App->render->IsOnCamera(pos.x, pos.y, data.tile_width, data.tile_height+32, (*item_cam)))
 						{
@@ -89,55 +88,6 @@ TileSet* j1Map::GetTilesetFromTileId(int id) const
 	}
 
 	return set;
-}
-
-iPoint j1Map::MapToWorld(int x, int y) const
-{
-	iPoint ret;
-
-	if(data.type == MAPTYPE_ORTHOGONAL)
-	{
-		ret.x = x * data.tile_width;
-		ret.y = y * data.tile_height;
-	}
-	else if(data.type == MAPTYPE_ISOMETRIC)
-	{
-		ret.x = (x - y) * (data.tile_width * 0.5f);
-		ret.y = (x + y) * (data.tile_height * 0.5f);
-	}
-	else
-	{
-		LOG("Unknown map type");
-		ret.x = x; ret.y = y;
-	}
-
-	return ret;
-}
-
-iPoint j1Map::WorldToMap(int x, int y) const
-{
-	iPoint ret(0,0);
-
-	if(data.type == MAPTYPE_ORTHOGONAL)
-	{
-		ret.x = x / data.tile_width;
-		ret.y = y / data.tile_height;
-	}
-	else if(data.type == MAPTYPE_ISOMETRIC)
-	{
-		
-		float half_width = data.tile_width * 0.5f;
-		float half_height = data.tile_height * 0.5f;
-		ret.x = int( (x / half_width + y / half_height) / 2) - 1;
-		ret.y = int( (y / half_height - (x / half_width)) / 2);
-	}
-	else
-	{
-		LOG("Unknown map type");
-		ret.x = x; ret.y = y;
-	}
-
-	return ret;
 }
 
 SDL_Rect TileSet::GetTileRect(int id) const
@@ -466,4 +416,96 @@ int Properties::Get(const char * value, int default_value) const
 	}
 
 	return default_value;
+}
+
+iPoint j1Map::MapToScreenI(int column, int row) const
+{
+
+	iPoint screen_pos(0, 0);
+	switch (data.type) {
+	case MapTypes::MAPTYPE_ORTHOGONAL:
+		screen_pos.x = column * data.tile_width;
+		screen_pos.y = row * data.tile_height;
+		break;
+	case MapTypes::MAPTYPE_ISOMETRIC:
+		screen_pos.x = (column - row) * data.tile_width * 0.5f;
+		screen_pos.y = (column + row) * data.tile_height * 0.5f;
+		break;
+	default:
+		LOG("ERROR: Map type not identified.");
+		break;
+	}
+
+	return screen_pos;
+}
+
+fPoint j1Map::MapToScreenF(const fPoint & map_pos)
+{
+	fPoint screen_pos(0.0F, 0.0F);
+	switch (data.type) {
+	case MapTypes::MAPTYPE_ORTHOGONAL:
+		screen_pos.x = map_pos.x * data.tile_width;
+		screen_pos.y = map_pos.y * data.tile_height;
+		break;
+	case MapTypes::MAPTYPE_ISOMETRIC:
+		screen_pos.x = (map_pos.x - map_pos.y) * (data.tile_width * 0.5f);
+		screen_pos.y = (map_pos.x + map_pos.y) * (data.tile_height * 0.5f);
+		break;
+	default:
+		LOG("ERROR: Map type not identified.");
+		break;
+	}
+
+	return screen_pos;
+}
+
+iPoint j1Map::ScreenToMapI(int x, int y) const
+{
+	iPoint ret(0, 0);
+
+	if (data.type == MAPTYPE_ORTHOGONAL)
+	{
+		ret.x = x / data.tile_width;
+		ret.y = y / data.tile_height;
+	}
+	else if (data.type == MAPTYPE_ISOMETRIC)
+	{
+
+		float half_width = data.tile_width * 0.5f;
+		float half_height = data.tile_height * 0.5f;
+		ret.x = int((x / half_width + y / half_height) * 0.5f);
+		ret.y = int((y / half_height - (x / half_width)) * 0.5f);
+	}
+	else
+	{
+		LOG("Unknown map type");
+		ret.x = x; ret.y = y;
+	}
+	return ret;
+}
+
+fPoint j1Map::ScreenToMapF(float x, float y)
+{
+	fPoint ret(0, 0);
+
+	if (data.type == MAPTYPE_ORTHOGONAL)
+	{
+		ret.x = x / data.tile_width;
+		ret.y = y / data.tile_height;
+	}
+	else if (data.type == MAPTYPE_ISOMETRIC)
+	{
+
+		float half_width = data.tile_width * 0.5f;
+		float half_height = data.tile_height * 0.5f;
+		ret.x = ((x / half_width) + y / half_height) * 0.5f;
+		ret.y = ((y / half_height) - x / half_width) * 0.5f;
+		return ret;
+	}
+	else
+	{
+		LOG("Unknown map type");
+		ret.x = x; ret.y = y;
+	}
+	return ret;
 }

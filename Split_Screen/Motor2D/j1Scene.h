@@ -2,6 +2,7 @@
 #define __j1SCENE_H__
 
 #include "j1Module.h"
+#include "Obj_Player.h"
 
 struct SDL_Texture;
 
@@ -27,13 +28,17 @@ public:
 	bool Update(float dt);
 
 	// Called before all Updates
-	bool PostUpdate();
+	bool PostUpdate(float dt);
 
 	// Called before quitting
 	bool CleanUp();
 
 private:
 	SDL_Texture* debug_tex;
+	Obj_Player* player_A = nullptr;
+	Obj_Player* player_B = nullptr;
+	Obj_Player* player_C = nullptr;
+	Obj_Player* player_D = nullptr;
 };
 
 #endif // __j1SCENE_H__

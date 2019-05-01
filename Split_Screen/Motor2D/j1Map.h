@@ -3,8 +3,9 @@
 
 #include "PugiXml/src/pugixml.hpp"
 #include <list>
-#include "p2Point.h"
+#include "Point.h"
 #include "j1Module.h"
+#include "Defs.h"
 #include <string>
 
 // ----------------------------------------------------
@@ -120,9 +121,13 @@ public:
 	// Load new map
 	bool Load(const char* path);
 
-	iPoint MapToWorld(int x, int y) const;
-	iPoint WorldToMap(int x, int y) const;
-	bool CreateWalkabilityMap(int& width, int& height, uchar** buffer) const;
+	iPoint MapToScreenI(int column, int row) const;
+
+	fPoint MapToScreenF(const fPoint & map_pos);
+
+	iPoint ScreenToMapI(int x, int y) const;
+
+	fPoint ScreenToMapF(float x, float y);
 
 private:
 

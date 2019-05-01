@@ -2,7 +2,7 @@
 #define __j1RENDER_H__
 
 #include "SDL/include/SDL.h"
-#include "p2Point.h"
+#include "Point.h"
 #include "j1Module.h"
 #include <vector>
 
