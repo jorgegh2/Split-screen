@@ -123,39 +123,40 @@ bool j1Render::Awake(pugi::xml_node& config)
 		}*/
 
 
-		float margin = 32; //size of margin
+		float margin = 32;										//size of margin.
 
-		uint n_cameras_columns = 2;								//number of columns
-		uint n_cameras_rows = 3;								//number of rows
-		uint n_cameras_aux = 0;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation)
+		uint n_cameras_columns = 3;								//number of columns.
+		uint n_cameras_rows = 3;								//number of rows.
+		uint n_cameras_aux = 0;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).
 
-		ORIENTATION orientation = ORIENTATION::SQUARE_ORDER;	//orientation of the cameras, look the declaration for more information
+		ORIENTATION orientation = ORIENTATION::SQUARE_ORDER;	//orientation of the cameras, look the declaration for more information.
 
 
 
-		uint final_width = 0;									//the final width that the camera will have in every case
-		uint final_height = 0;									//the final height that the camera will have in every case
+		uint final_width = 0;									//the final width that the camera will have in every case.
+		uint final_height = 0;									//the final height that the camera will have in every case.
 		uint n_cameras = 0;										//will be replaced by n_cameras_rows or n_cameras_columns depending on the orientation.
-		uint n_cameras_max = 0;
+		uint n_cameras_max = 0;									//maximum number of cameras.
 			
 
-		uint n_cameras_columns_aux = 0;
-		uint n_cameras_height_aux = 0;
+		uint n_cameras_columns_aux = 0;							//number of cameras in the last column. it is assigned the value of n_cameras_axu if the orientation is vertical automatically.
+		uint n_cameras_rows_aux = 0;							//number of cameras in the last row. it is assigned the value of n_cameras_axu if the orientation is horizontal automatically.
+
 		if (orientation == ORIENTATION::SQUARE_ORDER)
 		{
-			n_cameras_max = n_cameras_columns * n_cameras_rows;
+			n_cameras_max = n_cameras_columns * n_cameras_rows;			//Calcule the max number of cameras in this case.
 		}
 		else
 		{
 			if (orientation == ORIENTATION::HORIZONTAL)
 			{
 				n_cameras_columns_aux = n_cameras_aux; 
-				n_cameras_max = (n_cameras_rows - 1) * n_cameras_columns + n_cameras_columns_aux;
+				n_cameras_max = (n_cameras_rows - 1) * n_cameras_columns + n_cameras_columns_aux;		//Calcule the max number of cameras in this case. 
 			}
 			else if (orientation == ORIENTATION::VERTICAL)
 			{
-				n_cameras_height_aux = n_cameras_aux;
-				n_cameras_max = n_cameras_rows * (n_cameras_columns - 1) + n_cameras_height_aux;
+				n_cameras_rows_aux = n_cameras_aux;
+				n_cameras_max = n_cameras_rows * (n_cameras_columns - 1) + n_cameras_rows_aux;			//Calcule the max number of cameras in this case.
 			}
 		}
 
@@ -164,7 +165,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 		float width_aux = (App->win->screen_surface->w - ((n_cameras_columns_aux + 1) * margin)) / n_cameras_columns_aux;	//the same but with differents number of columns
 
 		float height = (App->win->screen_surface->h - ((n_cameras_rows + 1)*margin)) / n_cameras_rows;						//screen height - the sum of all margin (height) / number of rows
-		float height_aux = (App->win->screen_surface->h - ((n_cameras_height_aux + 1)*margin)) / n_cameras_height_aux;		//the same but with differents number of rows
+		float height_aux = (App->win->screen_surface->h - ((n_cameras_rows_aux + 1)*margin)) / n_cameras_rows_aux;		//the same but with differents number of rows
 
 	
 		for (uint i = 0; i < n_cameras_max; ++i)
@@ -172,7 +173,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 			Camera* camera_aux = nullptr;
 			camera_aux = new Camera();
 
-			if (orientation == ORIENTATION::HORIZONTAL)
+			if (orientation == ORIENTATION::HORIZONTAL || orientation == ORIENTATION::SQUARE_ORDER)							//it is the same for the case of horizontal orientation as the case of square orientation, but the square will not enter in the else. 
 			{
 				final_height = height;
 				n_cameras = n_cameras_columns;
@@ -198,7 +199,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 				final_width = width;
 				n_cameras = n_cameras_rows;
 
-				if (n_cameras_max - i > n_cameras_height_aux)
+				if (n_cameras_max - i > n_cameras_rows_aux)
 				{
 					final_height = height;
 
@@ -208,7 +209,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 				else
 				{
 					final_height = height_aux;
-					n_cameras_aux = n_cameras_height_aux;
+					n_cameras_aux = n_cameras_rows_aux;
 					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
 					camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));;
 				}
