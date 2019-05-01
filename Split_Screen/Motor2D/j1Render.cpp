@@ -54,36 +54,19 @@ bool j1Render::Awake(pugi::xml_node& config)
 	}
 	else
 	{
-		Camera* camera_aux1 = nullptr;
-		camera_aux1 = new Camera();
-
-		Camera* camera_aux2 = nullptr;
-		camera_aux2 = new Camera();
-
-		Camera* camera_aux3 = nullptr;
-		camera_aux3 = new Camera();
-
-		Camera* camera_aux4 = nullptr;
-		camera_aux4 = new Camera();
-
-		float margin = 32;
-		uint n_cameras_width = 3;
-		uint n_cameras_width_aux = 2;
-		uint n_cameras_height = 2;
-		uint n_cameras_max = n_cameras_width * (n_cameras_height - 1) + n_cameras_width_aux;
-
-		float width = (App->win->screen_surface->w - ((n_cameras_width + 1) * margin)) / n_cameras_width;
-		float width_aux = (App->win->screen_surface->w - ((n_cameras_width_aux + 1) * margin)) / n_cameras_width_aux;
-		float height = (App->win->screen_surface->h - ((n_cameras_height + 1)*margin)) / n_cameras_height;
-
+	
 		//float width = App->win->screen_surface->w * .5f - margin - margin * 0.5f;
 		//float height = App->win->screen_surface->h * .5f - margin - margin * 0.5f;
 
-		for (uint i = 0; i < n_cameras_max; ++i)
+
+		// if width aux
+		//uint n_cameras_max = n_cameras_width * (n_cameras_height - 1) + n_cameras_width_aux;
+
+		/*for (uint i = 0; i < n_cameras_max; ++i)
 		{
 			Camera* camera_aux = nullptr;
 			camera_aux = new Camera();
-			if (n_cameras_max - i >= n_cameras_width)
+			if (n_cameras_max - i > n_cameras_width_aux)
 			{
 				camera_aux->rect.w = width;
 				camera_aux->rect.h = height;
@@ -105,6 +88,134 @@ bool j1Render::Awake(pugi::xml_node& config)
 				camera_aux->screen_section.x = margin + (i % n_cameras_width_aux *(width_aux + margin));
 				camera_aux->screen_section.y = margin + (i / n_cameras_width * (height + margin));
 			}
+			cameras.push_back(camera_aux);
+		}*/
+
+		// if height aux
+		
+		/*for (uint i = 0; i < n_cameras_max; ++i)
+		{
+			Camera* camera_aux = nullptr;
+			camera_aux = new Camera();
+			if (n_cameras_max - i > n_cameras_height_aux)
+			{
+				camera_aux->rect.w = width;
+				camera_aux->rect.h = height;
+
+				camera_aux->screen_section.w = width;
+				camera_aux->screen_section.h = height;
+
+				camera_aux->screen_section.x = margin + (i / n_cameras_height *(width + margin));
+				camera_aux->screen_section.y = margin + (i % n_cameras_height * (height + margin));
+			}
+			else
+			{
+				camera_aux->rect.w = width;
+				camera_aux->rect.h = height_aux;
+
+				camera_aux->screen_section.w = width;
+				camera_aux->screen_section.h = height_aux;
+
+				camera_aux->screen_section.x = margin + (i / n_cameras_height *(width + margin));
+				camera_aux->screen_section.y = margin + (i % n_cameras_height_aux * (height_aux + margin));
+			}
+			cameras.push_back(camera_aux);
+		}*/
+
+
+		float margin = 32; //size of margin
+
+		uint n_cameras_columns = 2;								//number of columns
+		uint n_cameras_rows = 3;								//number of rows
+		uint n_cameras_aux = 0;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation)
+
+		ORIENTATION orientation = ORIENTATION::SQUARE_ORDER;	//orientation of the cameras, look the declaration for more information
+
+
+
+		uint final_width = 0;									//the final width that the camera will have in every case
+		uint final_height = 0;									//the final height that the camera will have in every case
+		uint n_cameras = 0;										//will be replaced by n_cameras_rows or n_cameras_columns depending on the orientation.
+		uint n_cameras_max = 0;
+			
+
+		uint n_cameras_columns_aux = 0;
+		uint n_cameras_height_aux = 0;
+		if (orientation == ORIENTATION::SQUARE_ORDER)
+		{
+			n_cameras_max = n_cameras_columns * n_cameras_rows;
+		}
+		else
+		{
+			if (orientation == ORIENTATION::HORIZONTAL)
+			{
+				n_cameras_columns_aux = n_cameras_aux; 
+				n_cameras_max = (n_cameras_rows - 1) * n_cameras_columns + n_cameras_columns_aux;
+			}
+			else if (orientation == ORIENTATION::VERTICAL)
+			{
+				n_cameras_height_aux = n_cameras_aux;
+				n_cameras_max = n_cameras_rows * (n_cameras_columns - 1) + n_cameras_height_aux;
+			}
+		}
+
+																															/* The + 1 is because there will always be one more margin */
+		float width = (App->win->screen_surface->w - ((n_cameras_columns + 1) * margin)) / n_cameras_columns;				//screen width - the sum of all margin (width) / number of columns
+		float width_aux = (App->win->screen_surface->w - ((n_cameras_columns_aux + 1) * margin)) / n_cameras_columns_aux;	//the same but with differents number of columns
+
+		float height = (App->win->screen_surface->h - ((n_cameras_rows + 1)*margin)) / n_cameras_rows;						//screen height - the sum of all margin (height) / number of rows
+		float height_aux = (App->win->screen_surface->h - ((n_cameras_height_aux + 1)*margin)) / n_cameras_height_aux;		//the same but with differents number of rows
+
+	
+		for (uint i = 0; i < n_cameras_max; ++i)
+		{
+			Camera* camera_aux = nullptr;
+			camera_aux = new Camera();
+
+			if (orientation == ORIENTATION::HORIZONTAL)
+			{
+				final_height = height;
+				n_cameras = n_cameras_columns;
+
+				if (n_cameras_max - i > n_cameras_columns_aux)
+				{
+					final_width = width;
+
+					camera_aux->screen_section.x = margin + (i % n_cameras * (final_width + margin));
+					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));
+				}
+				else
+				{
+					final_width = width_aux;
+					n_cameras_aux = n_cameras_columns_aux;
+
+					camera_aux->screen_section.x = margin + (i % n_cameras_aux * (final_width + margin));
+					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));
+				}
+			}
+			if (orientation == ORIENTATION::VERTICAL)
+			{
+				final_width = width;
+				n_cameras = n_cameras_rows;
+
+				if (n_cameras_max - i > n_cameras_height_aux)
+				{
+					final_height = height;
+
+					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
+					camera_aux->screen_section.y = margin + (i % n_cameras * (final_height + margin));
+				}
+				else
+				{
+					final_height = height_aux;
+					n_cameras_aux = n_cameras_height_aux;
+					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
+					camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));;
+				}
+			}
+			camera_aux->rect.w = camera_aux->screen_section.w = final_width;
+			camera_aux->rect.h = camera_aux->screen_section.h = final_height;
+		
 			cameras.push_back(camera_aux);
 		}
 
