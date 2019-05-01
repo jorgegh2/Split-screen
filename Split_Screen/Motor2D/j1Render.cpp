@@ -57,11 +57,10 @@ bool j1Render::Awake(pugi::xml_node& config)
 	
 		margin = 32;											//size of margin.
 
-		uint n_cameras_columns = 3;								//number of columns.
-		uint n_cameras_rows = 3;								//number of rows.
-		uint n_cameras_aux = 2;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).
-
-		ORIENTATION orientation = ORIENTATION::SQUARE_ORDER;	//orientation of the cameras, look the declaration for more information.
+		n_cameras_columns = 3;								
+		n_cameras_rows = 3;								
+		n_cameras_aux = 2;						
+		orientation = ORIENTATION::SQUARE_ORDER;
 
 
 
@@ -76,6 +75,9 @@ bool j1Render::Awake(pugi::xml_node& config)
 
 		switch (orientation)
 		{
+		case ORIENTATION::NO_TYPE:
+			LOG("the orientaiton NO_TYPE is not valid.");																	//don't have cameras aux. 
+			break;
 		case ORIENTATION::SQUARE_ORDER:
 			n_cameras_max = n_cameras_columns * n_cameras_rows;										//Calcule the max number of cameras in this case.
 			n_cameras_aux = 0;																		//don't have cameras aux. 

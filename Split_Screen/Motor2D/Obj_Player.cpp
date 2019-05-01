@@ -75,7 +75,7 @@ bool Obj_Player::Start()
 		break;
 	}
 
-	speed = 5.f;//TODO: Load from xml
+	speed = 5.f;
 
 	cos_45 = cosf(-45 * DEGTORAD);
 	sin_45 = sinf(-45 * DEGTORAD);

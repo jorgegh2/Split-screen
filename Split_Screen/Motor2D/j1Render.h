@@ -8,6 +8,7 @@
 
 enum class ORIENTATION
 {
+	NO_TYPE,
 	SQUARE_ORDER,			//All cameras have the same width and height, even if it is not square order the maximum number of cameras.
 	HORIZONTAL,				//The cameras aux will have more width than the rest to occupy the whole row.
 	VERTICAL,				//The cameras aux will have more height than the rest to occupy the whole column.
@@ -63,7 +64,11 @@ public:
 	uint							width_of_first_camera = 0;
 	uint							height_of_first_camera = 0;
 
-	float							margin = 0;
+	float							margin = 0;								//size of margin.							
+	uint							n_cameras_columns = 0;					//number of columns.
+	uint							n_cameras_rows = 0;						//number of rows.
+	uint							n_cameras_aux = 0;						//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).
+	ORIENTATION						orientation	= ORIENTATION::NO_TYPE;		//orientation of the cameras, look the declaration for more information.
 
 	bool debug = true;
 };
