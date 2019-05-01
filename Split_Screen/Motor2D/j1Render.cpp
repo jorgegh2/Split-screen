@@ -127,7 +127,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 
 		uint n_cameras_columns = 3;								//number of columns.
 		uint n_cameras_rows = 3;								//number of rows.
-		uint n_cameras_aux = 0;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).
+		uint n_cameras_aux = 2;									//number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).
 
 		ORIENTATION orientation = ORIENTATION::SQUARE_ORDER;	//orientation of the cameras, look the declaration for more information.
 
@@ -142,22 +142,23 @@ bool j1Render::Awake(pugi::xml_node& config)
 		uint n_cameras_columns_aux = 0;							//number of cameras in the last column. it is assigned the value of n_cameras_axu if the orientation is vertical automatically.
 		uint n_cameras_rows_aux = 0;							//number of cameras in the last row. it is assigned the value of n_cameras_axu if the orientation is horizontal automatically.
 
-		if (orientation == ORIENTATION::SQUARE_ORDER)
+		switch (orientation)
 		{
-			n_cameras_max = n_cameras_columns * n_cameras_rows;			//Calcule the max number of cameras in this case.
-		}
-		else
-		{
-			if (orientation == ORIENTATION::HORIZONTAL)
-			{
-				n_cameras_columns_aux = n_cameras_aux; 
-				n_cameras_max = (n_cameras_rows - 1) * n_cameras_columns + n_cameras_columns_aux;		//Calcule the max number of cameras in this case. 
-			}
-			else if (orientation == ORIENTATION::VERTICAL)
-			{
-				n_cameras_rows_aux = n_cameras_aux;
-				n_cameras_max = n_cameras_rows * (n_cameras_columns - 1) + n_cameras_rows_aux;			//Calcule the max number of cameras in this case.
-			}
+		case ORIENTATION::SQUARE_ORDER:
+			n_cameras_max = n_cameras_columns * n_cameras_rows;										//Calcule the max number of cameras in this case.
+			n_cameras_aux = 0;																		//don't have cameras aux. 
+			break;
+		case ORIENTATION::HORIZONTAL:
+			n_cameras_columns_aux = n_cameras_aux;
+			n_cameras_max = (n_cameras_rows - 1) * n_cameras_columns + n_cameras_columns_aux;		//Calcule the max number of cameras in this case. 
+			break;
+		case ORIENTATION::VERTICAL:
+			n_cameras_rows_aux = n_cameras_aux;
+			n_cameras_max = n_cameras_rows * (n_cameras_columns - 1) + n_cameras_rows_aux;			//Calcule the max number of cameras in this case.
+			break;
+		default:
+			LOG("the orientaiton is not correct.");
+			break;
 		}
 
 																															/* The + 1 is because there will always be one more margin */
@@ -165,7 +166,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 		float width_aux = (App->win->screen_surface->w - ((n_cameras_columns_aux + 1) * margin)) / n_cameras_columns_aux;	//the same but with differents number of columns
 
 		float height = (App->win->screen_surface->h - ((n_cameras_rows + 1)*margin)) / n_cameras_rows;						//screen height - the sum of all margin (height) / number of rows
-		float height_aux = (App->win->screen_surface->h - ((n_cameras_rows_aux + 1)*margin)) / n_cameras_rows_aux;		//the same but with differents number of rows
+		float height_aux = (App->win->screen_surface->h - ((n_cameras_rows_aux + 1)*margin)) / n_cameras_rows_aux;			//the same but with differents number of rows
 
 	
 		for (uint i = 0; i < n_cameras_max; ++i)
@@ -175,47 +176,48 @@ bool j1Render::Awake(pugi::xml_node& config)
 
 			if (orientation == ORIENTATION::HORIZONTAL || orientation == ORIENTATION::SQUARE_ORDER)							//it is the same for the case of horizontal orientation as the case of square orientation, but the square will not enter in the else. 
 			{
-				final_height = height;
+				final_height = height;																						//assign the height, is the same in all the positions.
 				n_cameras = n_cameras_columns;
 
-				if (n_cameras_max - i > n_cameras_columns_aux)
+				if (n_cameras_max - i > n_cameras_columns_aux)																//if the camera is not in the last row.
 				{
-					final_width = width;
+					final_width = width;																					//assign the normal width.
 
-					camera_aux->screen_section.x = margin + (i % n_cameras * (final_width + margin));
-					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));
+					camera_aux->screen_section.x = margin + (i % n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section.
+					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));						//the x have the % and the y the / to set the order from left to the right.
 				}
-				else
+				else																										//if the camera is in the last row. the square orientation will not enter here.
 				{
-					final_width = width_aux;
+					final_width = width_aux;																				//assign the width_aux in the last row becuase is different.
 					n_cameras_aux = n_cameras_columns_aux;
 
-					camera_aux->screen_section.x = margin + (i % n_cameras_aux * (final_width + margin));
-					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));
+					camera_aux->screen_section.x = margin + (i % n_cameras_aux * (final_width + margin));					//formulas to calculate the x and y of the screen section in the last row.				
+					camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));						//the x have the % and the y the / to set the order left left to the right.
 				}
 			}
-			if (orientation == ORIENTATION::VERTICAL)
+			else if (orientation == ORIENTATION::VERTICAL)
 			{
-				final_width = width;
+				final_width = width;																						//assign the width, is the same in all the positions.
 				n_cameras = n_cameras_rows;
 
-				if (n_cameras_max - i > n_cameras_rows_aux)
+				if (n_cameras_max - i > n_cameras_rows_aux)																	//if the camera is not in the last column.
 				{
-					final_height = height;
+					final_height = height;																					//assign the normal height.
 
-					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
-					camera_aux->screen_section.y = margin + (i % n_cameras * (final_height + margin));
+					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section.
+					camera_aux->screen_section.y = margin + (i % n_cameras * (final_height + margin));						//the x have the / and the y the % to set the order from up to the down.
 				}
 				else
 				{
-					final_height = height_aux;
+					final_height = height_aux;																				//assign the height_aux in the last column becuase is different.
 					n_cameras_aux = n_cameras_rows_aux;
-					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
-					camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));;
+					camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section in the last column.	
+					camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));					//the x have the / and the y the % to set the order from up to the down.
 				}
 			}
-			camera_aux->rect.w = camera_aux->screen_section.w = final_width;
-			camera_aux->rect.h = camera_aux->screen_section.h = final_height;
+
+			camera_aux->rect.w = camera_aux->screen_section.w = final_width;									//assign the final width in the rect and the screen_section defined above in each case.
+			camera_aux->rect.h = camera_aux->screen_section.h = final_height;									//assign the final height in the rect and the screen_section definded above in each case.
 		
 			cameras.push_back(camera_aux);
 		}
