@@ -63,6 +63,8 @@ public:
 	uint							width_of_first_camera = 0;
 	uint							height_of_first_camera = 0;
 
+	float							margin = 0;
+
 	bool debug = true;
 };
 

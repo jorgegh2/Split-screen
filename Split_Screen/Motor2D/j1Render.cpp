@@ -55,7 +55,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 	else
 	{
 	
-		float margin = 32;										//size of margin.
+		margin = 32;											//size of margin.
 
 		uint n_cameras_columns = 3;								//number of columns.
 		uint n_cameras_rows = 3;								//number of rows.
@@ -180,53 +180,53 @@ bool j1Render::PostUpdate()
 	SDL_SetRenderDrawColor(renderer, background.r, background.g, background.g, background.a);
 	SDL_RenderPresent(renderer);
 
-	//std::vector<Camera*>::iterator item_cam;
-	//if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
-	//{
-	//	debug = !debug;
-	//	if (!debug)
-	//	{
-	//		for (uint i = 0; i < cameras.size() - 1; ++i)
-	//		{
-	//			camera_saves.push_back(cameras.back());
-	//			cameras.pop_back();
-	//		}
-	//		/*camera_saves.push_back(cameras.back());
-	//		cameras.pop_back();
+	std::vector<Camera*>::iterator item_cam;
+	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		debug = !debug;
+		if (!debug)
+		{
+			for (uint i = cameras.size(); i > 1; i = cameras.size())
+			{
+				camera_saves.push_back(cameras.back());
+				cameras.pop_back();
+			}
+			/*camera_saves.push_back(cameras.back());
+			cameras.pop_back();
 
-	//		camera_saves.push_back(cameras.back());
-	//		cameras.pop_back();
+			camera_saves.push_back(cameras.back());
+			cameras.pop_back();
 
-	//		camera_saves.push_back(cameras.back());
-	//		cameras.pop_back();*/
-	//		width_of_first_camera = cameras.front()->rect.w;
-	//		height_of_first_camera = cameras.front()->rect.h;
+			camera_saves.push_back(cameras.back());
+			cameras.pop_back();*/
+			width_of_first_camera = cameras.front()->rect.w;
+			height_of_first_camera = cameras.front()->rect.h;
 
-	//		cameras.front()->rect.w = cameras.front()->screen_section.w = App->win->screen_surface->w;
-	//		cameras.front()->rect.h = cameras.front()->screen_section.h = App->win->screen_surface->h;
+			cameras.front()->rect.w = cameras.front()->screen_section.w = App->win->screen_surface->w - margin * 2;
+			cameras.front()->rect.h = cameras.front()->screen_section.h = App->win->screen_surface->h - margin * 2;
 
-	//	}
-	//	else
-	//	{
-	//		for (uint i = 0; i < camera_saves.size(); ++i)
-	//		{
-	//			cameras.push_back(camera_saves.back());
-	//			camera_saves.pop_back();
-	//		}
-	//		/*cameras.push_back(camera_saves.back());
-	//		camera_saves.pop_back();
+		}
+		else
+		{
+			for (uint i = camera_saves.size(); i > 0; i = camera_saves.size())
+			{
+				cameras.push_back(camera_saves.back());
+				camera_saves.pop_back();
+			}
+			/*cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();
 
-	//		cameras.push_back(camera_saves.back());
-	//		camera_saves.pop_back();
+			cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();
 
-	//		cameras.push_back(camera_saves.back());
-	//		camera_saves.pop_back();*/
+			cameras.push_back(camera_saves.back());
+			camera_saves.pop_back();*/
 
-	//		cameras.front()->rect.w = cameras.front()->screen_section.w = width_of_first_camera;
-	//		cameras.front()->rect.h = cameras.front()->screen_section.h = height_of_first_camera;
-	//		
-	//	}
-	//}
+			cameras.front()->rect.w = cameras.front()->screen_section.w = width_of_first_camera;
+			cameras.front()->rect.h = cameras.front()->screen_section.h = height_of_first_camera;
+			
+		}
+	}
 	return true;
 }
 

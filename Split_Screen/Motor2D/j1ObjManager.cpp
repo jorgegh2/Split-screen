@@ -66,12 +66,10 @@ bool j1ObjManager::PostUpdate()
 	for (std::vector<Camera*>::iterator item_cam = App->render->cameras.begin(); item_cam != App->render->cameras.end(); ++item_cam)
 	{
 		SDL_RenderSetClipRect(App->render->renderer, &(*item_cam)->screen_section);
-
-		//todo: add when is only in cam
-
+		
 		for (std::list<Object*>::iterator item = objects.begin(); item != objects.end(); ++item)
 		{
-		  (*item)->Draw(*item_cam);
+			(*item)->Draw(*item_cam);
 		}
     }
 	SDL_RenderSetClipRect(App->render->renderer, nullptr);

@@ -26,4 +26,8 @@
     <folder>maps/</folder>
   </map>
 
+  <object_manager>
+    
+  </object_manager>
+
 </config>
