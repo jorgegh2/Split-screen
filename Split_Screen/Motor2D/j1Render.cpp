@@ -67,29 +67,44 @@ bool j1Render::Awake(pugi::xml_node& config)
 		camera_aux4 = new Camera();
 
 		float margin = 32;
-		uint n_cameras_width = 1;
+		uint n_cameras_width = 3;
+		uint n_cameras_width_aux = 2;
 		uint n_cameras_height = 2;
+		uint n_cameras_max = n_cameras_width * (n_cameras_height - 1) + n_cameras_width_aux;
 
 		float width = (App->win->screen_surface->w - ((n_cameras_width + 1) * margin)) / n_cameras_width;
+		float width_aux = (App->win->screen_surface->w - ((n_cameras_width_aux + 1) * margin)) / n_cameras_width_aux;
 		float height = (App->win->screen_surface->h - ((n_cameras_height + 1)*margin)) / n_cameras_height;
 
 		//float width = App->win->screen_surface->w * .5f - margin - margin * 0.5f;
 		//float height = App->win->screen_surface->h * .5f - margin - margin * 0.5f;
 
-		for (uint i = 0; i < n_cameras_width * n_cameras_height; ++i)
+		for (uint i = 0; i < n_cameras_max; ++i)
 		{
 			Camera* camera_aux = nullptr;
 			camera_aux = new Camera();
+			if (n_cameras_max - i >= n_cameras_width)
+			{
+				camera_aux->rect.w = width;
+				camera_aux->rect.h = height;
 
-			camera_aux->rect.w = width;
-			camera_aux->rect.h = height;
+				camera_aux->screen_section.w = width;
+				camera_aux->screen_section.h = height;
 
-			camera_aux->screen_section.w = width;
-			camera_aux->screen_section.h = height;
+				camera_aux->screen_section.x = margin + (i % n_cameras_width *(width + margin));
+				camera_aux->screen_section.y = margin + (i / n_cameras_width * (height + margin));
+			}
+			else
+			{
+				camera_aux->rect.w = width_aux;
+				camera_aux->rect.h = height;
 
-			camera_aux->screen_section.x = margin + (i % n_cameras_width *(width + margin));
-			camera_aux->screen_section.y = margin + (i / n_cameras_width *(height + margin));
+				camera_aux->screen_section.w = width_aux;
+				camera_aux->screen_section.h = height;
 
+				camera_aux->screen_section.x = margin + (i % n_cameras_width_aux *(width_aux + margin));
+				camera_aux->screen_section.y = margin + (i / n_cameras_width * (height + margin));
+			}
 			cameras.push_back(camera_aux);
 		}
 
