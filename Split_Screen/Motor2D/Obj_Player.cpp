@@ -49,6 +49,10 @@ Obj_Player::~Obj_Player()
 bool Obj_Player::Start()
 {
 	SDL_Texture* tex_player_a = App->tex->Load("textures/Player_A.png");
+	SDL_Texture* tex_player_b = App->tex->Load("textures/Player_B.png");
+	SDL_Texture* tex_player_c = App->tex->Load("textures/Player_C.png");
+	SDL_Texture* tex_player_d = App->tex->Load("textures/Player_D.png");
+
 	switch (tank_num) {
 	case 0:
 		kb_up		= SDL_SCANCODE_W;
@@ -62,7 +66,7 @@ bool Obj_Player::Start()
 		kb_left		= SDL_SCANCODE_F;
 		kb_down		= SDL_SCANCODE_G;
 		kb_right	= SDL_SCANCODE_H;
-		curr_tex = tex_player_a;
+		curr_tex = tex_player_b;
 
 		break;
 	case 2:
@@ -70,7 +74,7 @@ bool Obj_Player::Start()
 		kb_left		= SDL_SCANCODE_J;
 		kb_down		= SDL_SCANCODE_K;
 		kb_right	= SDL_SCANCODE_L;
-		curr_tex = tex_player_a;
+		curr_tex = tex_player_c;
 
 		break;
 	case 3:
@@ -78,7 +82,7 @@ bool Obj_Player::Start()
 		kb_left		= SDL_SCANCODE_KP_4;
 		kb_down		= SDL_SCANCODE_KP_5;
 		kb_right	= SDL_SCANCODE_KP_6;
-		curr_tex = tex_player_a;
+		curr_tex = tex_player_d;
 
 		break;
 	default:
@@ -124,9 +128,7 @@ void Obj_Player::CameraMovement(float dt)
 	if (camera_player == nullptr)
 		return;
 
-	//camera_player->ResetCamera();
-	//camera_player->FollowPlayer(dt, this);
-	//camera_player->ShakeCamera(dt);
+	camera_player->FollowPlayer(dt, this);
 }
 
 void Obj_Player::Movement(float dt)
@@ -136,8 +138,6 @@ void Obj_Player::Movement(float dt)
 
 	InputMovementKeyboard(input_dir);
 	
-
-
 	//The tank has to go up in isometric space, so we need to rotate the input vector by 45 degrees
 	fPoint iso_dir(0.f, 0.f);
 	iso_dir.x = input_dir.x * cos_45 - input_dir.y * sin_45;

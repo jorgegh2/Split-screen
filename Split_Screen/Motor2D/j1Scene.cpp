@@ -50,29 +50,12 @@ bool j1Scene::PreUpdate()
 // Called each loop iteration
 bool j1Scene::Update(float dt)
 {
-	/*if(App->input->GetKey(SDL_SCANCODE_L) == KEY_DOWN)
-		App->LoadGame("save_game.xml");
-
-	if(App->input->GetKey(SDL_SCANCODE_S) == KEY_DOWN)
-		App->SaveGame("save_game.xml");*/
-
-	if(App->input->GetKey(SDL_SCANCODE_UP) == KEY_REPEAT)
-		App->render->cameras[0]->rect.y -= floor(200.0f * dt);
-
-	if(App->input->GetKey(SDL_SCANCODE_DOWN) == KEY_REPEAT)
-		App->render->cameras[0]->rect.y += floor(200.0f * dt);
-
-	if(App->input->GetKey(SDL_SCANCODE_LEFT) == KEY_REPEAT)
-		App->render->cameras[0]->rect.x -= floor(200.0f * dt);
-
-	if(App->input->GetKey(SDL_SCANCODE_RIGHT) == KEY_REPEAT)
-		App->render->cameras[0]->rect.x += floor(200.0f * dt);
 
 	return true;
 }
 
 // Called each loop iteration
-bool j1Scene::PostUpdate(float dt)
+bool j1Scene::PostUpdate()
 {
 	bool ret = true;
 

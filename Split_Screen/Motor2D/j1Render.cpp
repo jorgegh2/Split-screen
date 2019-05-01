@@ -244,10 +244,7 @@ void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y
 		spritesheet_rect.w = rect_in_screen.w;
 		spritesheet_rect.h = rect_in_screen.h;
 	}
-	if (current_camera == cameras[1])
-	{
-		current_camera = current_camera;
-	}
+
 	//Move the rect_in_screen to their correct screen =========================== 	
 	rect_in_screen.x += current_camera->screen_section.x;
 	rect_in_screen.y += current_camera->screen_section.y;

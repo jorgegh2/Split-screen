@@ -49,6 +49,9 @@
     <ClCompile Include="Log.cpp">
       <Filter>Desenvolupament  ========\Tools</Filter>
     </ClCompile>
+    <ClCompile Include="MathUtils.cpp">
+      <Filter>Desenvolupament  ========\Tools</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="j1Window.h">
@@ -106,6 +109,9 @@
       <Filter>Desenvolupament  ========\Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Tankerfield\Tankerfield\Tankerfield\Defs.h">
+      <Filter>Desenvolupament  ========\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="MathUtils.h">
       <Filter>Desenvolupament  ========\Tools</Filter>
     </ClInclude>
   </ItemGroup>
