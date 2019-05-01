@@ -55,13 +55,12 @@ bool j1Render::Awake(pugi::xml_node& config)
 	else
 	{
 	
-		margin = 32;											//size of margin.
+		margin = config.child("margin").attribute("value").as_int();
 
-		n_cameras_columns = 3;								
-		n_cameras_rows = 3;								
-		n_cameras_aux = 2;						
-		orientation = ORIENTATION::SQUARE_ORDER;
-
+		n_cameras_columns = config.child("n_cameras_columns").attribute("value").as_int();
+		n_cameras_rows = config.child("n_cameras_rows").attribute("value").as_int();
+		n_cameras_aux = config.child("n_cameras_aux").attribute("value").as_int();
+		orientation = (ORIENTATION)config.child("orientation").attribute("value").as_int();
 
 
 		uint final_width = 0;									//the final width that the camera will have in every case.
@@ -183,7 +182,7 @@ bool j1Render::PostUpdate()
 	SDL_RenderPresent(renderer);
 
 	std::vector<Camera*>::iterator item_cam;
-	if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	if (App->input->GetKey(SDL_SCANCODE_F5) == KEY_DOWN)
 	{
 		debug = !debug;
 		if (!debug)
@@ -193,14 +192,7 @@ bool j1Render::PostUpdate()
 				camera_saves.push_back(cameras.back());
 				cameras.pop_back();
 			}
-			/*camera_saves.push_back(cameras.back());
-			cameras.pop_back();
 
-			camera_saves.push_back(cameras.back());
-			cameras.pop_back();
-
-			camera_saves.push_back(cameras.back());
-			cameras.pop_back();*/
 			width_of_first_camera = cameras.front()->rect.w;
 			height_of_first_camera = cameras.front()->rect.h;
 
@@ -215,19 +207,24 @@ bool j1Render::PostUpdate()
 				cameras.push_back(camera_saves.back());
 				camera_saves.pop_back();
 			}
-			/*cameras.push_back(camera_saves.back());
-			camera_saves.pop_back();
-
-			cameras.push_back(camera_saves.back());
-			camera_saves.pop_back();
-
-			cameras.push_back(camera_saves.back());
-			camera_saves.pop_back();*/
 
 			cameras.front()->rect.w = cameras.front()->screen_section.w = width_of_first_camera;
 			cameras.front()->rect.h = cameras.front()->screen_section.h = height_of_first_camera;
 			
 		}
+	}
+
+	else if (App->input->GetKey(SDL_SCANCODE_F1) == KEY_DOWN)
+	{
+		App->win->SetScale(1.f);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_F2) == KEY_DOWN)
+	{
+		App->win->SetScale(0.5f);
+	}
+	else if (App->input->GetKey(SDL_SCANCODE_F3) == KEY_DOWN)
+	{
+		App->win->SetScale(2.f);
 	}
 	return true;
 }
@@ -258,7 +255,7 @@ void j1Render::ResetViewPort()
 // Blit to screen
 void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y, Camera* current_camera, const SDL_Rect* section) const
 {
-	uint scale = App->win->GetScale();
+	float scale = App->win->GetScale();
 
 	SDL_Rect rect_in_screen;
 	SDL_Rect spritesheet_rect{ 0,0,0,0 };
@@ -278,6 +275,9 @@ void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y
 		SDL_QueryTexture(texture, NULL, NULL, &rect_in_screen.w, &rect_in_screen.h);
 		spritesheet_rect.w = rect_in_screen.w;
 		spritesheet_rect.h = rect_in_screen.h;
+
+		rect_in_screen.w *= scale;
+		rect_in_screen.h *= scale;
 	}
 
 	//Move the rect_in_screen to their correct screen =========================== 	
@@ -294,7 +294,7 @@ void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y
 bool j1Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 b, Uint8 a, bool use_camera) const
 {
 	bool ret = true;
-	uint scale = App->win->GetScale();
+	float scale = App->win->GetScale();
 
 	SDL_SetRenderDrawBlendMode(renderer, SDL_BLENDMODE_BLEND);
 	SDL_SetRenderDrawColor(renderer, r, g, b, a);
@@ -317,7 +317,7 @@ bool j1Render::DrawLine(int x1, int y1, int x2, int y2, Uint8 r, Uint8 g, Uint8 
 
 bool j1Render::IsOnCamera(const int & x, const int & y, const int & w, const int & h, Camera* camera) const
 {
-	int scale = App->win->GetScale();
+	float scale = App->win->GetScale();
 
 	SDL_Rect r = { x*scale,y*scale,w*scale,h*scale };
 

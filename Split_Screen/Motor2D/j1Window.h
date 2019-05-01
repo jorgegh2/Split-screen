@@ -29,7 +29,9 @@ public:
 	void GetWindowSize(uint& width, uint& height) const;
 
 	// Retrieve window scale
-	uint GetScale() const;
+	float GetScale() const;
+
+	void SetScale(float new_scale);
 
 public:
 	//The window we'll be rendering to
@@ -42,7 +44,7 @@ private:
 	std::string	title;
 	uint		width;
 	uint		height;
-	uint		scale;
+	float		scale;
 };
 
 #endif // __j1WINDOW_H__

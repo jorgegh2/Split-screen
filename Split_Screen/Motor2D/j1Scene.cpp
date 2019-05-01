@@ -31,14 +31,10 @@ bool j1Scene::Start()
 {
 	App->map->Load("iso_walk.tmx");	
 
-	debug_tex = App->tex->Load("maps/path2.png");
-
 	player_A = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 0,0 });
 	player_B = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 5,5 });
 	player_C = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 10,10 });
 	player_D = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 15,15 });
-	player_E = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 20,20 });
-	player_F = (Obj_Player*)App->obj_manager->CreateObject(ObjectType::PLAYER, { 20,20 });
 
 	return true;
 }

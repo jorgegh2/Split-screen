@@ -8,7 +8,7 @@
 
 enum class ORIENTATION
 {
-	NO_TYPE,
+	NO_TYPE = 0,
 	SQUARE_ORDER,			//All cameras have the same width and height, even if it is not square order the maximum number of cameras.
 	HORIZONTAL,				//The cameras aux will have more width than the rest to occupy the whole row.
 	VERTICAL,				//The cameras aux will have more height than the rest to occupy the whole column.
