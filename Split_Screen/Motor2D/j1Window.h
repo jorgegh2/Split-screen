@@ -3,9 +3,11 @@
 
 #include "j1Module.h"
 #include <string>
+#include "SDL/include/SDL_stdinc.h"
 
 struct SDL_Window;
 struct SDL_Surface;
+
 
 class j1Window : public j1Module
 {
@@ -18,6 +20,8 @@ public:
 
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
+
+	SDL_Window* CreateNewWindow(int width, int height, const Uint32 &flags);
 
 	// Called before quitting
 	bool CleanUp();
@@ -36,6 +40,7 @@ public:
 public:
 	//The window we'll be rendering to
 	SDL_Window* window;
+	SDL_Window* window2;
 
 	//The surface contained by the window
 	SDL_Surface* screen_surface;

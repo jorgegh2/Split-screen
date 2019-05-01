@@ -28,6 +28,8 @@ public:
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
 
+	SDL_Renderer*  CreateNewRenderAndWindow(int width, int height, const Uint32 &flags);
+
 	// Called before the first frame
 	bool Start();
 

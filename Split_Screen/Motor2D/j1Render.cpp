@@ -44,8 +44,10 @@ bool j1Render::Awake(pugi::xml_node& config)
 		flags |= SDL_RENDERER_PRESENTVSYNC;
 		LOG("Using vsync");
 	}
-
-	renderer = SDL_CreateRenderer(App->win->window, -1, flags);
+	uint width = 0;
+	uint height = 0;
+	App->win->GetWindowSize(width, height);
+	renderer = CreateNewRenderAndWindow(width, height, SDL_WINDOW_BORDERLESS);
 
 	if(renderer == NULL)
 	{
@@ -158,6 +160,12 @@ bool j1Render::Awake(pugi::xml_node& config)
 	}
 
 	return ret;
+}
+
+SDL_Renderer* j1Render::CreateNewRenderAndWindow(int width, int height, const Uint32 &window_flags)
+{
+	SDL_Window* win = App->win->CreateNewWindow(width, height, SDL_WINDOW_BORDERLESS);
+	return SDL_CreateRenderer(win, -1, 6);
 }
 
 // Called before the first frame
