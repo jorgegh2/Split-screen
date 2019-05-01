@@ -38,16 +38,15 @@ private:
 private:
 
 	//- Logic
-	int tank_num							= 0;//The number of tank. 0 is the first one.
+	int player_num							= 0;//The number of tank. 0 is the first one.
 
-	static int number_of_tanks;
+	static int number_of_players;
 
-	float cos_45 = 0.f;//TODO: Create a macro with its value directly
+	float cos_45 = 0.f;
 	float sin_45 = 0.f;
 
 	//- Movement
 	float speed								= 0.f;
-	fPoint velocity							= { 0.f, 0.f };
 
 	SDL_Scancode kb_up						= SDL_SCANCODE_UNKNOWN;
 	SDL_Scancode kb_left					= SDL_SCANCODE_UNKNOWN;

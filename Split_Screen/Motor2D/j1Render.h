@@ -37,10 +37,6 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
-	// Load / Save
-	bool Load(pugi::xml_node&);
-	bool Save(pugi::xml_node&) const;
-
 	// Utils
 	void SetViewPort(const SDL_Rect& rect);
 	void ResetViewPort();
@@ -63,6 +59,9 @@ public:
 	std::vector<Camera*>			camera_saves;
 	SDL_Rect						viewport;
 	SDL_Color						background;
+
+	uint							width_of_first_camera = 0;
+	uint							height_of_first_camera = 0;
 
 	bool debug = true;
 };
