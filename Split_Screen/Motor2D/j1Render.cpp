@@ -66,12 +66,37 @@ bool j1Render::Awake(pugi::xml_node& config)
 		Camera* camera_aux4 = nullptr;
 		camera_aux4 = new Camera();
 
-		float margin = 0;
+		float margin = 32;
+		uint n_cameras_width = 1;
+		uint n_cameras_height = 2;
 
-		float with = App->win->screen_surface->w * .5f - margin - margin * 0.5f;
-		float height = App->win->screen_surface->h * .5f - margin - margin * 0.5f;
+		float width = (App->win->screen_surface->w - ((n_cameras_width + 1) * margin)) / n_cameras_width;
+		float height = (App->win->screen_surface->h - ((n_cameras_height + 1)*margin)) / n_cameras_height;
 
-		camera_aux1->rect.w = with;
+		//float width = App->win->screen_surface->w * .5f - margin - margin * 0.5f;
+		//float height = App->win->screen_surface->h * .5f - margin - margin * 0.5f;
+
+		for (uint i = 0; i < n_cameras_width * n_cameras_height; ++i)
+		{
+			Camera* camera_aux = nullptr;
+			camera_aux = new Camera();
+
+			camera_aux->rect.w = width;
+			camera_aux->rect.h = height;
+
+			camera_aux->screen_section.w = width;
+			camera_aux->screen_section.h = height;
+
+			camera_aux->screen_section.x = margin + (i % n_cameras_width *(width + margin));
+			camera_aux->screen_section.y = margin + (i / n_cameras_width *(height + margin));
+
+			cameras.push_back(camera_aux);
+		}
+
+
+
+
+		/*camera_aux1->rect.w = with;
 		camera_aux2->rect.w = with;
 		camera_aux3->rect.w = with;
 		camera_aux4->rect.w = with;
@@ -112,7 +137,7 @@ bool j1Render::Awake(pugi::xml_node& config)
 		cameras.push_back(camera_aux1);
 		cameras.push_back(camera_aux2);
 		cameras.push_back(camera_aux3);
-		cameras.push_back(camera_aux4);
+		cameras.push_back(camera_aux4);*/
 
 	}
 

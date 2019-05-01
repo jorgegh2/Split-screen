@@ -39,6 +39,8 @@ private:
 	Obj_Player* player_B = nullptr;
 	Obj_Player* player_C = nullptr;
 	Obj_Player* player_D = nullptr;
+	Obj_Player* player_E = nullptr;
+	Obj_Player* player_F = nullptr;
 };
 
 #endif // __j1SCENE_H__

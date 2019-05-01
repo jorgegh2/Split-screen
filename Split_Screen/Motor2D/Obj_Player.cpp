@@ -53,14 +53,14 @@ bool Obj_Player::Start()
 	SDL_Texture* tex_player_c = App->tex->Load("textures/Player_C.png");
 	SDL_Texture* tex_player_d = App->tex->Load("textures/Player_D.png");
 
-	switch (tank_num) {
-	case 0:
+	/*switch (tank_num) {
+	case 0:*/
 		kb_up		= SDL_SCANCODE_W;
 		kb_left		= SDL_SCANCODE_A;
 		kb_down		= SDL_SCANCODE_S;
 		kb_right	= SDL_SCANCODE_D;
 		curr_tex = tex_player_a;
-		break;
+/*		break;
 	case 1:
 		kb_up		= SDL_SCANCODE_T;
 		kb_left		= SDL_SCANCODE_F;
@@ -88,7 +88,7 @@ bool Obj_Player::Start()
 	default:
 		LOG("Number of tanks is greater than 3. You probably restarted the game and need to set the variable to 0 again.");
 		break;
-	}
+	}*/
 
 	speed = 5.f;//TODO: Load from xml
 
