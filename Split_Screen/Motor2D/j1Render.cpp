@@ -66,42 +66,47 @@ bool j1Render::Awake(pugi::xml_node& config)
 		Camera* camera_aux4 = nullptr;
 		camera_aux4 = new Camera();
 
-		camera_aux1->rect.w = App->win->screen_surface->w * .5f;
-		camera_aux2->rect.w = App->win->screen_surface->w * .5f;
-		camera_aux3->rect.w = App->win->screen_surface->w * .5f;
-		camera_aux4->rect.w = App->win->screen_surface->w * .5f;
+		float margin = 0;
 
-		camera_aux1->rect.h = App->win->screen_surface->h * .5f;
-		camera_aux2->rect.h = App->win->screen_surface->h * .5f;
-		camera_aux3->rect.h = App->win->screen_surface->h * .5f;
-		camera_aux4->rect.h = App->win->screen_surface->h * .5f;
+		float with = App->win->screen_surface->w * .5f - margin - margin * 0.5f;
+		float height = App->win->screen_surface->h * .5f - margin - margin * 0.5f;
 
+		camera_aux1->rect.w = with;
+		camera_aux2->rect.w = with;
+		camera_aux3->rect.w = with;
+		camera_aux4->rect.w = with;
+
+		camera_aux1->rect.h = height;
+		camera_aux2->rect.h = height;
+		camera_aux3->rect.h = height;
+		camera_aux4->rect.h = height;
+		
 		camera_aux1->screen_section = {
-			0,
-			0,
-			(int)(App->win->screen_surface->w * .5f),
-			(int)(App->win->screen_surface->h * .5f)
+			(int)margin,
+			(int)margin,
+			(int)(camera_aux1->rect.w),
+			(int)(camera_aux1->rect.h)
 		};
 
 		camera_aux2->screen_section = {
-			(int)(App->win->screen_surface->w * .5f),
-			0,
-			(int)(App->win->screen_surface->w * .5f),
-			(int)(App->win->screen_surface->h * .5f)
+			(int)(camera_aux1->screen_section.x + camera_aux1->screen_section.w + margin),
+			(int)margin,
+			(int)(camera_aux2->rect.w),
+			(int)(camera_aux2->rect.h)
 		};
 
 		camera_aux3->screen_section = {
-			0,
-			(int)(App->win->screen_surface->h * .5f),
-			(int)(App->win->screen_surface->w * .5f),
-			(int)(App->win->screen_surface->h * .5f)
+			(int)margin,
+			(int)(camera_aux1->screen_section.y + camera_aux1->screen_section.h + margin),
+			(int)(camera_aux3->rect.w),
+			(int)(camera_aux3->rect.h)
 		};
 
 		camera_aux4->screen_section = {
-		(int)(App->win->screen_surface->w * .5f),
-		(int)(App->win->screen_surface->h * .5f),
-		(int)(App->win->screen_surface->w * .5f),
-		(int)(App->win->screen_surface->h * .5f)
+		(int)(camera_aux3->screen_section.x + camera_aux3->screen_section.w + margin),
+		(int)(camera_aux2->screen_section.y + camera_aux2->screen_section.h + margin),
+		(int)(camera_aux4->rect.w),
+		(int)(camera_aux4->rect.h)
 		};
 
 		cameras.push_back(camera_aux1);
