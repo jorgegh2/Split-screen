@@ -62,36 +62,21 @@ bool j1Window::Awake(pugi::xml_node& config)
 			flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
 		}
 
-	//	CreateNewWindow(width, height, flags);//window2 = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
+		window = SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
 		
-		//if(window == NULL)
-		//{
-		//	LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-		//	ret = false;
-		//}
-		//else
-		//{
-		//	//Get window surface
-		//	screen_surface = SDL_GetWindowSurface(window);
-		//}
+		if(window == NULL)
+		{
+			LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+			ret = false;
+		}
+		else
+		{
+			//Get window surface
+			screen_surface = SDL_GetWindowSurface(window);
+		}
 	}
 
 	return ret;
-}
-
-SDL_Window* j1Window::CreateNewWindow(int width, int height, const Uint32 &flags)
-{
-	SDL_Window* win =  SDL_CreateWindow(App->GetTitle(), SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-	if (win == NULL)
-	{
-		LOG("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-	}
-	else
-	{
-		//Get window surface
-		screen_surface = SDL_GetWindowSurface(win);
-	}
-	return win;
 }
 
 // Called before quitting

@@ -28,7 +28,7 @@ public:
 	// Called before render is available
 	bool Awake(pugi::xml_node&);
 
-	SDL_Renderer*  CreateNewRenderAndWindow(int width, int height, const Uint32 &flags);
+	void CreateSplitScreen();
 
 	// Called before the first frame
 	bool Start();
@@ -39,10 +39,6 @@ public:
 
 	// Called before quitting
 	bool CleanUp();
-
-	// Utils
-	void SetViewPort(const SDL_Rect& rect);
-	void ResetViewPort();
 
 	// Draw & Blit
 	void Blit(SDL_Texture* texture, int screen_x, int screen_y, Camera* camera, const SDL_Rect* section = NULL) const;

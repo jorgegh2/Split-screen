@@ -8,10 +8,10 @@
 	
   <renderer>
     <vsync value="true"/>
-    <margin value="32"/>
+    <margin value="10"/>
     <n_cameras_columns value="2"/>
-    <n_cameras_rows value="2"/>
-    <n_cameras_aux value="0"/>
+    <n_cameras_rows value="3"/>
+    <n_cameras_aux value="1"/>
     <orientation value="1"/> <!--the orientation in int: 1: SQUARE_ORDER, 2: HORIZONTAL, 3: VERTICAL-->
   </renderer>
 
