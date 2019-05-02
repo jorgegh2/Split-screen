@@ -252,35 +252,34 @@ void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y
 {
 	float scale = App->win->GetScale();
 
-	SDL_Rect rect_in_screen;
-	SDL_Rect spritesheet_rect{ 0,0,0,0 };
+	SDL_Rect rect_in_screen{ 0,0,0,0 };
 
 	//Transform the rect in the word to the rect in screen =======================
 	rect_in_screen.x = -current_camera->rect.x + screen_x * scale;
 	rect_in_screen.y = -current_camera->rect.y + screen_y * scale;
 
-	if (section != NULL)
-	{
-		spritesheet_rect = *section;
-		rect_in_screen.w = section->w * scale;
-		rect_in_screen.h = section->h * scale;
-	}
-	else
-	{
-		SDL_QueryTexture(texture, NULL, NULL, &rect_in_screen.w, &rect_in_screen.h);
-		spritesheet_rect.w = rect_in_screen.w;
-		spritesheet_rect.h = rect_in_screen.h;
-
-		rect_in_screen.w *= scale;
-		rect_in_screen.h *= scale;
-	}
-
 	//Move the rect_in_screen to their correct screen =========================== 	
 	rect_in_screen.x += current_camera->screen_section.x;
 	rect_in_screen.y += current_camera->screen_section.y;
 
+	if (section != NULL)
+	{
+
+		rect_in_screen.w = section->w;
+		rect_in_screen.h = section->h;
+	}
+	else
+	{
+		SDL_QueryTexture(texture, NULL, NULL, &rect_in_screen.w, &rect_in_screen.h);
+	}
+
+	rect_in_screen.w *= scale;
+	rect_in_screen.h *= scale;
+
+	
+
 	//Print the rect_in_screen ============================================
-	if (SDL_RenderCopy(renderer, texture, &spritesheet_rect, &rect_in_screen))
+	if (SDL_RenderCopy(renderer, texture, section, &rect_in_screen))
 	{
 		LOG("Cannot blit to main_object. SDL_RenderCopy error: %s", SDL_GetError());
 	}
