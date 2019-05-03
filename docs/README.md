@@ -12,6 +12,8 @@ Go to the exercises, download the repository and go to the *Exercises* folder.
 
 If you want to see the solution, you can download the repository and go to the *Solution* folder.
 
+There is a presentation for this project. You can enter [here](https://docs.google.com/presentation/d/1fNaSGmWLskHiHgxzNtHG6GmavzeBu5s9NzlnPtSxhmQ/edit?usp=sharing).
+
 
 # Split Screen
 A split screen is a software program with the capacity of split X times their window with a horizontal or vertical orientation. The objective to do that, is that the user or player can view different areas of the same or other softwares at the same time.
