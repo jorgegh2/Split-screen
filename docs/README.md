@@ -7,7 +7,7 @@ subject Project 2, under supervision of lecturer
 <https://es.linkedin.com/in/ricardpillosu>(Ricard Pillosu).
 
 
-## Split Screen
+# Split Screen
 A split screen is a software program with the capacity of split X times their window with a horizontal or vertical orientation. The objective to do that, is that the user or player can view different areas of the same or other softwares at the same time.
 
 ## When we need a split screen?
@@ -138,7 +138,7 @@ bool j1ObjManager::PostUpdate()
 ```
 In Draw functions, ecery object do a blit with this camera.
 
-## Exercises with their solution
+# Exercises with their solution
 
 ### TODO 0: 
 Set the values in config to have 4 cameras. You don't need to modify n_cameras_aux for now…
@@ -160,4 +160,128 @@ Calculate the max number of cameras in n_cameras_max with n_cameras_columns and 
 ```
 
 ### Result:
+<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_0_Result.png">
+
+### TODO 1:
+Calculate the position of every camera in the screen in camera_aux->screen_section.
+
+You have the “final_width” and the “final_height” calculated of each camera, the “margin” and “n_cameras” that is the “n_cameras_column” in this case.
+
+### Solution:
+```
+camera_aux->screen_section.x = margin + (i % n_cameras * (final_width + margin));	
+camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));	
+```
+
+### Result:
+This Todo don't have result. we aren't using this values yet.
+
+### TODO 2:
+Calculate the new position in rect_in_screen.
+
+Remember that you calculate the position on screen in camera_aux->screen_section.
+
+### Solution:
+
+```
+	rect_in_screen.x = -current_camera->rect.x + screen_x * scale;
+	rect_in_screen.y = -current_camera->rect.y + screen_y * scale;
+
+	//Move the rect_in_screen to their correct screen =========================== 	
+	rect_in_screen.x += current_camera->screen_section.x;
+	rect_in_screen.y += current_camera->screen_section.y;
+```
+
+### Result:
+
+<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_2_Result.png">
+
+### TODO 3:
+Assign one camera that is not assigned yet to the current player.
+
+### Solution:
+```
+std::vector<Camera*>::iterator item_cam;
+
+	for (item_cam = App->render->cameras.begin(); item_cam != App->render->cameras.end(); ++item_cam)
+	{
+		if (!(*item_cam)->assigned)
+		{
+			(*item_cam)->assigned = true;
+			camera_player = (*item_cam);
+			break;
+		}
+	}
+```
+
+### Result:
+
+<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_3_Result.png">
+
+### TODO 4:
+Try to have 3 cameras now. You have to modify the vars in config.
+
+In addition, now you will have to change n_cameras_aux of the config and the orientation. We are going to try to do it with the "horizontal" orientation
+
+The n_cameras_aux is the number of cameras that are in the last row or column depending the orientation
+
+If the orientation is “horizontal”, the position of y will be the same.
+
+### Solution:
+```
+ <n_cameras_columns value="2"/>
+ <n_cameras_rows value="2"/>
+ <n_cameras_aux value="1"/>
+ <orientation value="2"/>
+```
+
+```
+camera_aux->screen_section.x = margin + (i % n_cameras_aux * (final_width + margin));			
+camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));
+```
+
+### Result:
+
+<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_4_Result.png">
+
+### TODO 5:
+Try the same but with the vertical orientation. 
+
+now we do not count from left to right, now we count from top to bottom.
+
+In the last column it happens the same, we don’t have the same number of cameras.
+
+### Solution:
+
+```
+<orientation value="3"/>
+```
+```
+camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));
+camera_aux->screen_section.y = margin + (i % n_cameras * (final_height + margin));
+```
+```
+camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));		
+camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));
+
+```
+
+### Result:
+
+<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_5_Result.png">
+
+This is the final of the exercises. Whith this system, you can split the screen in n numbers including primary numbers. This numbers have more width or height depending of he orientation. But have some problems that can improve the system if their are fixed.
+
+## Improvements
+-The problem with this system is that the camera aux you can't place it in the left or up depending of the orientation, only in right or down.
+
+-This system don't have the option to do Voronoi Split screen.if you are interested in how imlement a Voronoi split screen, here you can find more information.
+
+## More Info:
+https://mattwoelk.github.io/voronoi_split_screen_notes/
+https://www.reddit.com/r/gaming/comments/5hehly/why_arent_developers_doing_split_screen_anymore/
+https://www.youtube.com/watch?v=tu-Qe66AvtY (25:36s)
+
+
+
 
