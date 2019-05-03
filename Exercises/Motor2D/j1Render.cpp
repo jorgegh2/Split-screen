@@ -87,8 +87,8 @@ void j1Render::CreateSplitScreen()
 		LOG("the orientaiton NO_TYPE is not valid.");																	//don't have cameras aux. 
 		break;
 	case ORIENTATION::SQUARE_ORDER:
-		//TODO 0: Calculate the max number of cameras in n_cameras_max with n_cameras_columns and n_cameras_rows
-		n_cameras_max = n_cameras_columns * n_cameras_rows;										//Calcule the max number of cameras in this case.
+		//TODO 0: Calculate the max number of cameras in n_cameras_max with n_cameras_columns and n_cameras_rows									//Calcule the max number of cameras in this case.
+		
 		n_cameras_aux = 0;																		//don't have cameras aux. 
 		break;
 	case ORIENTATION::HORIZONTAL:

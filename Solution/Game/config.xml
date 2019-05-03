@@ -8,6 +8,7 @@
 	
   <renderer>
     <vsync value="true"/>
+    <!--TODO 0: Set the values to have 4 cameras. You don't need to modify n_cameras_aux for now...-->
     <margin value="10"/>
     <n_cameras_columns value="2"/>
     <n_cameras_rows value="2"/>

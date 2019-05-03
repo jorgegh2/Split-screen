@@ -83,6 +83,7 @@ bool Obj_Player::Start()
 	
 	std::vector<Camera*>::iterator item_cam;
 
+	//TODO 3: Assign one camera that is not assigned yet to the current player. When we assign one camera, we don't want to continue in the loop.
 	for (item_cam = App->render->cameras.begin(); item_cam != App->render->cameras.end(); ++item_cam)
 	{
 		if (!(*item_cam)->assigned)
