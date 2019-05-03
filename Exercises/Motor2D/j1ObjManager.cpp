@@ -1,7 +1,5 @@
 
 #include <string>
-
-#include "Brofiler/Brofiler.h"
 #include "PugiXml/src/pugiconfig.hpp"
 #include "PugiXml/src/pugixml.hpp"
 
