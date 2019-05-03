@@ -194,7 +194,7 @@ Remember that you calculate the position on screen in camera_aux->screen_section
 
 ### Result:
 
-<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_2_Result.png">
+<img width="600" height="600" src="TODO_2_Result.png">
 
 ### TODO 3:
 Assign one camera that is not assigned yet to the current player.
@@ -216,7 +216,7 @@ std::vector<Camera*>::iterator item_cam;
 
 ### Result:
 
-<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_3_Result.png">
+<img width="600" height="600" src="TODO_3_Result.png">
 
 ### TODO 4:
 Try to have 3 cameras now. You have to modify the vars in config.
@@ -242,7 +242,7 @@ camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin)
 
 ### Result:
 
-<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_4_Result.png">
+<img width="600" height="600" src="TODO_4_Result.png">
 
 ### TODO 5:
 Try the same but with the vertical orientation. 
@@ -268,7 +268,7 @@ camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + mar
 
 ### Result:
 
-<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_5_Result.png">
+<img width="600" height="600" src="TODO_5_Result.png">
 
 This is the final of the exercises. Whith this system, you can split the screen in n numbers including primary numbers. This numbers have more width or height depending of he orientation. But have some problems that can improve the system if their are fixed.
 
