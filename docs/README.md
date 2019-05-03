@@ -1,10 +1,16 @@
 
 
-I am <link to your linkedIn>(Jorge Gemas), student of the
-<https://www.citm.upc.edu/ing/estudis/graus-videojocs/>(Bachelor’s Degree in
-Video Games by UPC at CITM). This content is generated for the second year’s
+I am [Jorge Gemas](https://github.com/jorgegh2) , student of the
+[Bachelor’s Degree in
+Video Games by UPC at CITM](https://www.citm.upc.edu/ing/estudis/graus-videojocs/). This content is generated for the second year’s
 subject Project 2, under supervision of lecturer
-<https://es.linkedin.com/in/ricardpillosu>(Ricard Pillosu).
+[Ricard Pillosu](https://es.linkedin.com/in/ricardpillosu).
+
+Go to the repository of the [Slpit Screen](https://github.com/jorgegh2/Split-screen).
+
+Go to the exercises, download the repository and go to the *Exercises* folder.
+
+If you want to see the solution, you can download the repository and go to the *Solution* folder or download the [realese]().
 
 
 # Split Screen
@@ -42,12 +48,23 @@ spending a lot of resources needlessly. If we have this situation, we can imeple
 
 ## Voronoi Split Screen
 In the Voronoi split screen, when the players are together, the screen is not splitted But at the moment when the players are outside the range of the camera, the screen is splitted by the perpendicular of the line that joins them, indicating the direction of where the other players are. With this, when the players are together, we are not spending unnecessary resources and we are not limiting the size of their screen because they share the same camera until they separate. Some games are using Voronoi with 2 players, for example some games of the saga "*Lego*" like *LEGO Marvel Super Heroes*.
+
 ![](Voronoi_2_Players.gif)
+
+*Test of Voronoi with 2 players in Unreal.*
 
 With two players, Voronoi works pretty well. But when we add 4 players in total its a little bit caothic, because all cameras are moving between their and changing their position or mergering between each other, and the size of each camera is different. The forms of the each camera is different too and strange, causing confusion to the players. Personally, i don't recommend to use Voronoi with more than 2 players. Practically, no game is using Voronoi with more than 2 players.
 
+![](Voronoi_4_Players.gif)
+
+*Test of Voronoi with 4 players in c++.*
+
 ## Games that create new windows
 Some games have multiple primary focus points, but no have a local multiplayer mode. in this cases, this games can create new windows with their own camera, to see the primary focus points that the player want to see. This games don't need a split screen and they can select what point want to have consider and how many wants. they are usually management games, and example is a old game named *Transport Tycoon*.
+
+![](Transport_Tycoon.gif)
+
+*Gif of Transport Tycoon with some windows.*
 
 ## Important changes (code)
 now we have a new class Camera, and is not only a rect. This class have the function to set the pos of the camera following the player. The screen_section is the rect with the position of each camera in the screen and the bool assigned is a bool that turns in true if the camera has been assigned to a player.
