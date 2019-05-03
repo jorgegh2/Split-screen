@@ -87,6 +87,7 @@ void j1Render::CreateSplitScreen()
 		LOG("the orientaiton NO_TYPE is not valid.");																	//don't have cameras aux. 
 		break;
 	case ORIENTATION::SQUARE_ORDER:
+		//TODO 0: Calculate the max number of cameras in n_cameras_max with n_cameras_columns and n_cameras_rows
 		n_cameras_max = n_cameras_columns * n_cameras_rows;										//Calcule the max number of cameras in this case.
 		n_cameras_aux = 0;																		//don't have cameras aux. 
 		break;
@@ -125,16 +126,20 @@ void j1Render::CreateSplitScreen()
 			{
 				final_width = width;																					//assign the normal width.
 
-				camera_aux->screen_section.x = margin + (i % n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section.
-				camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));						//the x have the % and the y the / to set the order from left to the right.
+				//TODO 1: Calculate the position of every camera in the screen in camera_aux->screen_section.
+				
+			
+			
 			}
 			else																										//if the camera is in the last row. the square orientation will not enter here.
 			{
 				final_width = width_aux;																				//assign the width_aux in the last row becuase is different.
 				n_cameras_aux = n_cameras_columns_aux;
+				//TODO 4: Calculate the position of every camera in the screen in camera_aux->screen_section.
+				//remember that now the number of cameras is not the same.
+				
 
-				camera_aux->screen_section.x = margin + (i % n_cameras_aux * (final_width + margin));					//formulas to calculate the x and y of the screen section in the last row.				
-				camera_aux->screen_section.y = margin + (i / n_cameras * (final_height + margin));						//the x have the % and the y the / to set the order left left to the right.
+
 			}
 		}
 		else if (orientation == ORIENTATION::VERTICAL)
@@ -145,16 +150,20 @@ void j1Render::CreateSplitScreen()
 			if (n_cameras_max - i > n_cameras_rows_aux)																	//if the camera is not in the last column.
 			{
 				final_height = height;																					//assign the normal height.
-
-				camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section.
-				camera_aux->screen_section.y = margin + (i % n_cameras * (final_height + margin));						//the x have the / and the y the % to set the order from up to the down.
+				//TODO 5: Calculate the position of every camera in the screen in camera_aux->screen_section.
+				//now we do not count from left to right, now we count from top to bottom.
+				
+			
+			
 			}
 			else
 			{
 				final_height = height_aux;																				//assign the height_aux in the last column becuase is different.
 				n_cameras_aux = n_cameras_rows_aux;
-				camera_aux->screen_section.x = margin + (i / n_cameras * (final_width + margin));						//formulas to calculate the x and y of the screen section in the last column.	
-				camera_aux->screen_section.y = margin + (i % n_cameras_aux * (final_height + margin));					//the x have the / and the y the % to set the order from up to the down.
+				//TODO 5: Calculate the position of every camera in the screen in camera_aux->screen_section.
+				//In the last column it happens the same, we don’t have the same number of cameras.
+				
+			
 			}
 		}
 
@@ -254,13 +263,11 @@ void j1Render::Blit(SDL_Texture* texture, const int screen_x, const int screen_y
 
 	SDL_Rect rect_in_screen{ 0,0,0,0 };
 
-	//Transform the rect in the word to the rect in screen =======================
+	//TODO 2: Calculate the new position in rect_in_screen. Remember that you calculate the position on screen in camera_aux->screen_section.
 	rect_in_screen.x = -current_camera->rect.x + screen_x * scale;
 	rect_in_screen.y = -current_camera->rect.y + screen_y * scale;
+	
 
-	//Move the rect_in_screen to their correct screen =========================== 	
-	rect_in_screen.x += current_camera->screen_section.x;
-	rect_in_screen.y += current_camera->screen_section.y;
 
 	if (section != NULL)
 	{

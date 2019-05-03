@@ -1,0 +1,37 @@
+<!-- Config file for the game -->
+
+<config>
+  <app>
+    <title>Game Development Testbed</title>
+    <organization>UPC</organization>
+  </app>
+	
+  <renderer>
+    <vsync value="true"/>
+    <!--TODO 0: Set the values to have 4 cameras. You don't need to modify n_cameras_aux for now...-->
+    <margin value="10"/>                                 <!--size of margin.	-->
+    <n_cameras_columns value="0"/>                       <!--number of columns.-->
+    <n_cameras_rows value="0"/>                          <!--number of rows.-->
+    <n_cameras_aux value="0"/>                           <!--number of cameras in the last row or column (regardless of the orientation, selected if its rows or columns in the orientation).-->
+    <orientation value="0"/>                             <!--orientation of the cameras, look the declaration for more information.
+    the orientation in int: 1: SQUARE_ORDER, 2: HORIZONTAL, 3: VERTICAL-->
+
+  </renderer>
+
+  <window>
+    <resolution width="1024" height="768" scale="1"/>
+    <fullscreen value="false"/>
+    <borderless value="false"/>
+    <resizable value="false"/>
+    <fullscreen_window value="false"/>
+  </window>
+
+  <file_system>
+    <path>data.zip</path>
+  </file_system>
+
+  <map>
+    <folder>maps/</folder>
+  </map>
+
+</config>
