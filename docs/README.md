@@ -10,7 +10,7 @@ Go to the repository of the [Slpit Screen](https://github.com/jorgegh2/Split-scr
 
 Go to the exercises, download the repository and go to the *Exercises* folder.
 
-If you want to see the solution, you can download the repository and go to the *Solution* folder or download the [realese]().
+If you want to see the solution, you can download the repository and go to the *Solution* folder.
 
 
 # Split Screen
