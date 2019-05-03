@@ -160,7 +160,7 @@ Calculate the max number of cameras in n_cameras_max with n_cameras_columns and 
 ```
 
 ### Result:
-<img width="600" height="600" src="https://github.com/jorgegh2/Split-screen/blob/master/docs/TODO_0_Result.png">
+<img width="600" height="600" src="docs/TODO_3_Result.png">
 
 ### TODO 1:
 Calculate the position of every camera in the screen in camera_aux->screen_section.
