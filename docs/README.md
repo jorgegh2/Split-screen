@@ -45,5 +45,119 @@ In the Voronoi split screen, when the players are together, the screen is not sp
 
 With two players, Voronoi works pretty well. But when we add 4 players in total its a little bit caothic, because all cameras are moving between their and changing their position or mergering between each other, and the size of each camera is different. The forms of the each camera is different too and strange, causing confusion to the players. Personally, i don't recommend to use Voronoi with more than 2 players. Practically, no game is using Voronoi with more than 2 players.
 
-## Creation Windows
+## Games that create new windows
 Some games have multiple primary focus points, but no have a local multiplayer mode. in this cases, this games can create new windows with their own camera, to see the primary focus points that the player want to see. This games don't need a split screen and they can select what point want to have consider and how many wants. they are usually management games, and example is a old game named *Transport Tycoon*.
+
+## Important changes (code)
+now we have a new class Camera, and is not only a rect. This class have the function to set the pos of the camera following the player. The screen_section is the rect with the position of each camera in the screen and the bool assigned is a bool that turns in true if the camera has been assigned to a player.
+
+```
+Camera::Camera()
+{
+	lerp_factor = 5.f;
+}
+
+
+void Camera::FollowPlayer(float dt, Obj_Player * player)
+{
+	fPoint source_pos((float) rect.x, (float)rect.y);
+	fPoint target_pos (player->pos_screen.x * App->win->GetScale() - rect.w * 0.5f, player->pos_screen.y* App->win->GetScale() - rect.h * 0.5f);
+
+	fPoint lerp_pos = lerp(source_pos, target_pos, dt * lerp_factor);
+
+	rect.x = lerp_pos.x;
+	rect.y = lerp_pos.y;
+}
+```
+
+Now, for each blit we have to do a for with all cameras to pass the current camera to the blit:
+
+```
+bool j1Map::PostUpdate()
+{
+	if(map_loaded == false)
+		return false; 
+
+	
+	for (std::vector<Camera*>::iterator item_cam = App->render->cameras.begin(); item_cam != App->render->cameras.end(); ++item_cam)
+	{
+		SDL_RenderSetClipRect(App->render->renderer, &(*item_cam)->screen_section);
+
+		for (std::list<MapLayer*>::iterator item = data.layers.begin(); item != data.layers.end(); ++item)
+		{
+			MapLayer* layer = *item;
+
+			if (layer->properties.Get("Nodraw") != 0)
+				continue;
+
+			for (int y = 0; y < data.height; ++y)
+			{
+				for (int x = 0; x < data.width; ++x)
+				{
+					int tile_id = layer->Get(x, y);
+					if (tile_id > 0)
+					{
+						
+						TileSet* tileset = GetTilesetFromTileId(tile_id);
+
+						SDL_Rect r = tileset->GetTileRect(tile_id);
+						iPoint pos = MapToScreenI(x, y);
+
+						if (App->render->IsOnCamera(pos.x, pos.y, data.tile_width, data.tile_height+32, (*item_cam)))
+						{
+							App->render->Blit(tileset->texture, pos.x, pos.y, (*item_cam), &r);
+						}
+					}
+				}
+			}
+		}
+		SDL_RenderSetClipRect(App->render->renderer, nullptr);
+
+	}
+
+	return true;
+}
+```
+
+```
+bool j1ObjManager::PostUpdate()
+{
+	for (std::vector<Camera*>::iterator item_cam = App->render->cameras.begin(); item_cam != App->render->cameras.end(); ++item_cam)
+	{
+		SDL_RenderSetClipRect(App->render->renderer, &(*item_cam)->screen_section);
+		
+		for (std::list<Object*>::iterator item = objects.begin(); item != objects.end(); ++item)
+		{
+			(*item)->Draw(*item_cam);
+		}
+    }
+	SDL_RenderSetClipRect(App->render->renderer, nullptr);
+   
+	return true;
+}
+```
+In Draw functions, ecery object do a blit with this camera.
+
+## Exercises with their solution
+
+### TODO 0: 
+Set the values in config to have 4 cameras. You don't need to modify n_cameras_aux for now…
+
+Calculate the max number of cameras in n_cameras_max with n_cameras_columns and n_cameras_rows.
+
+### Solution:
+```
+  <n_cameras_columns value="2"/>
+  <n_cameras_rows value="2"/>
+  <n_cameras_aux value="0"/>
+  <orientation value="1"/>
+```
+```
+  case ORIENTATION::SQUARE_ORDER:
+		n_cameras_max = n_cameras_columns * n_cameras_rows;										//Calcule the max number of cameras in this case.
+		n_cameras_aux = 0;																		//don't have cameras aux. 
+		break;
+```
+
+### Result:
+
